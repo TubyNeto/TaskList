@@ -1,102 +1,81 @@
 <template>
-  <div class="hello">
-    <h1>{{ msg }}</h1>
-    <h2>Essential Links</h2>
-    <ul>
-      <li>
-        <a
-          href="https://vuejs.org"
-          target="_blank"
-        >
-          Core Docs
-        </a>
-      </li>
-      <li>
-        <a
-          href="https://forum.vuejs.org"
-          target="_blank"
-        >
-          Forum
-        </a>
-      </li>
-      <li>
-        <a
-          href="https://chat.vuejs.org"
-          target="_blank"
-        >
-          Community Chat
-        </a>
-      </li>
-      <li>
-        <a
-          href="https://twitter.com/vuejs"
-          target="_blank"
-        >
-          Twitter
-        </a>
-      </li>
-      <br>
-      <li>
-        <a
-          href="http://vuejs-templates.github.io/webpack/"
-          target="_blank"
-        >
-          Docs for This Template
-        </a>
-      </li>
-    </ul>
-    <h2>Ecosystem</h2>
-    <ul>
-      <li>
-        <a
-          href="http://router.vuejs.org/"
-          target="_blank"
-        >
-          vue-router
-        </a>
-      </li>
-      <li>
-        <a
-          href="http://vuex.vuejs.org/"
-          target="_blank"
-        >
-          vuex
-        </a>
-      </li>
-      <li>
-        <a
-          href="http://vue-loader.vuejs.org/"
-          target="_blank"
-        >
-          vue-loader
-        </a>
-      </li>
-      <li>
-        <a
-          href="https://github.com/vuejs/awesome-vue"
-          target="_blank"
-        >
-          awesome-vue
-        </a>
-      </li>
-    </ul>
-  </div>
+<div class="HelloWorld">
+  <section class="section">
+    <h1 class="title"> Menu <button @click="showAll">All</button> <button @click="showActive">Active</button> <button @click="showCompleted">Completed</button> <button @click="clearCompleted">Clear Completed</button> </h1> 
+    <input v-model="newTask"> <button @click="addTask">Add a new task</button>
+    <div v-for="(item, index) in tasks" v-if="item.show">
+      {{item.name}} <button @click="item.status=!item.status"> {{item.status ? "(✔)" : "( )"}} </button> <button @click="edit(index)">Edit</button> <div v-if="tasks[index].edition"> <input v-model="tasks[index].name"> <button @click="tasks[index].edition=!tasks[index].edition">OK</button> </div> <button @click="deleteTask(index)">Delete</button>
+    </div>
+  </section>
+</div>
 </template>
 
 <script>
+import "bulma/css/bulma.css";
 export default {
-  name: 'HelloWorld',
-  data () {
+  name: "HelloWorld",
+  data() {
     return {
-      msg: 'Welcome to Your Vue.js App'
+      newTask: "",
+      tasks:[
+      ]
+    };
+  },
+  methods:{
+    addTask(){
+      this.tasks.unshift({
+        name: this.newTask,
+        status: false,
+        show: true,
+        edition: false,
+      });
+    },
+    deleteTask(i){
+      this.tasks.splice(i, 1);
+    },
+    showAll(){
+      for (var i=0;i<this.tasks.length;i++){
+        this.tasks[i].show=true;
+      }
+    },
+    showActive(){
+      for (var i=0;i<this.tasks.length;i++){
+        if (this.tasks[i].status==false){
+          this.tasks[i].show=true;
+        }else{
+          this.tasks[i].show=false;
+        }
+      }
+    },
+    showCompleted(){
+      for (var i=0;i<this.tasks.length;i++){
+        if (this.tasks[i].status==true){
+          this.tasks[i].show=true;
+        }else{
+          this.tasks[i].show=false;
+        }
+      }
+    },
+    edit(i){
+      this.tasks[i].edition=true;
+    },
+    clearCompleted(){
+      for (var i=0;i<this.tasks.length;i++){
+        if (this.tasks[i].status){
+          this.tasks[i].name=null;
+          this.tasks[i].show=null;
+          this.tasks[i].status=null;
+        }
+      }
     }
   }
-}
+};
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-h1, h2 {
+/*h1,
+h2 {
   font-weight: normal;
 }
 ul {
@@ -109,5 +88,5 @@ li {
 }
 a {
   color: #42b983;
-}
+}*/
 </style>
